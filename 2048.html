@@ -103,7 +103,7 @@
         for(var i=0;i<$("ul li").length;i++){
           var t=i%4;
           if($("ul li").eq(i).html()!=""){
-            for(j=i-t;j<i-t+3;j++){
+            for(j=i-t;j<i;j++){
               if($("ul li").eq(j).html()==""){
                 $("ul li").eq(j).html($("ul li").eq(i).html());
                 $("ul li").eq(i).html("");
@@ -222,7 +222,7 @@
           if($("ul li").eq(i).html()==""){
             t--;
             if(t==0){
-              z=Math.floor(Math.random()*3);
+              z=Math.floor(Math.random()*2);
               $("ul li").eq(i).html(Math.pow(2,z));
               self.show.flashScore(Math.pow(2,z));
               break;
