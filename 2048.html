@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>play</title>
+<meta charset="UTF-8">
+</head>
+
+<style>
+    *{ margin:0; padding:0;}
+    html,body{ width: 100%; height: 100%;}
+    ul{ position: absolute; top: 50%; left: 50%; margin-top: -205px; margin-left: -205px; width: 408px; height: 408px; border:1px solid #ccc; list-style: none;}
+    ul li{ float: left; width: 100px; height: 100px; border:1px solid #ccc; background-color: #bbb; font-size: 40px; font-weight:bold; line-height: 100px; text-align: center; }
+    .tips{
+      padding-left: 30px;
+      color:#666;
+      font-size: :14px;
+    }
+    .show{
+      padding-left: 30px;
+      font-size: 20px;
+      color:#666;
+    }
+    .show .score{
+      color:#f60;
+      font-size: 24px;
+      text-decoration: normal;
+    }
+    
+</style>
+<body style="position: relative;">
+  <div class='tips'>请使用键盘小箭头进行操作</div>
+  <div class='show'>Score:<i class="score">0</i></div>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+  
+  function Game(){
+    var self=this;
+    this.init=function(){
+      var a1=Math.floor(Math.random()*16);
+      $("ul li").eq(a1).html("1");
+      var a2=Math.floor(Math.random()*15);
+      $("ul li").eq((a1+a2)%15).html("1");
+      self.show.flashScore(2);
+    },
+    this.check={
+      emptyBox:function(){
+        var a=0;
+        $("ul li").each(function(){
+          if($(this).html()==""){
+            a++;
+          }
+        });
+        if(a>=2){
+          self.show.addNum(a);
+          self.show.addNum(a-1);
+        }
+        else if(a==1){
+          self.show.addNum(a);
+        }
+        else{
+          self.check.gameOver()&&self.show.gameOver();
+        }
+      },
+      gameOver:function(){
+        for(var i=0;i<$("ul li").length-1;i++){
+          if(i%4!=3){
+            if($("ul li").eq(i).html()==$("ul li").eq(i+1).html()){
+              return false;
+            }
+          }
+          if(i>3){
+            if($("ul li").eq(i).html()==$("ul li").eq(i-4).html()){
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+    },
+    this.move={
+      left:function(){
+        for(var i=0;i<$("ul li").length;i++){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            for(j=i-t;j<i-t+3;j++){
+              if($("ul li").eq(j).html()==""){
+                $("ul li").eq(j).html($("ul li").eq(i).html());
+                $("ul li").eq(i).html("");
+                break;
+              }
+            }
+          }
+        }
+        for(var i=0;i<$("ul li").length;i++){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            if($("ul li").eq(i).html()==$("ul li").eq(i+1).html()&&t<3){
+              $("ul li").eq(i).html($("ul li").eq(i).html()*2);
+              $("ul li").eq(i+1).html("");
+              for(var k=i+1;k<i-t+3;k++){
+                $("ul li").eq(k).html($("ul li").eq(k+1).html());
+                $("ul li").eq(k+1).html("");
+              }
+            }
+          }
+        }
+        self.check.emptyBox();
+      },
+      top:function(){
+        for(var i=0;i<$("ul li").length;i++){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            for(j=t;j<i;j=j+4){
+              if($("ul li").eq(j).html()==""){
+                $("ul li").eq(j).html($("ul li").eq(i).html());
+                $("ul li").eq(i).html("");
+                break;
+              }
+            }
+          }
+        }
+        for(var i=0;i<$("ul li").length;i++){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            if($("ul li").eq(i).html()==$("ul li").eq(i+4).html()&&i<12){
+              $("ul li").eq(i).html($("ul li").eq(i).html()*2);
+              $("ul li").eq(i+4).html("");
+              for(var k=i+4;k<12;k=k+4){
+                $("ul li").eq(k).html($("ul li").eq(k+4).html());
+                $("ul li").eq(k+4).html("");
+              }
+            }
+          }
+        }
+        self.check.emptyBox();
+      },
+      down:function(){
+        for(var i=$("ul li").length-1;i>=0;i--){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            for(var j=12+t;j>i;j=j-4){
+              if($("ul li").eq(j).html()==""){
+                $("ul li").eq(j).html($("ul li").eq(i).html());
+                $("ul li").eq(i).html("");
+                break;
+              }
+            }
+          }
+        }
+        for(var i=$("ul li").length-1;i>=0;i--){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            if($("ul li").eq(i).html()==$("ul li").eq(i-4).html()&&i>3){
+              $("ul li").eq(i).html($("ul li").eq(i).html()*2);
+              $("ul li").eq(i-4).html("");
+              for(var k=i-4;k>3;k=k-4){
+                $("ul li").eq(k).html($("ul li").eq(k-4).html());
+                $("ul li").eq(k-4).html("");
+              }
+            }
+          }
+        }
+        self.check.emptyBox();
+      },
+      right:function(){
+        for(var i=$("ul li").length-1;i>=0;i--){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            for(var j=i+3-t;j>i;j--){
+              if($("ul li").eq(j).html()==""){
+                $("ul li").eq(j).html($("ul li").eq(i).html());
+                $("ul li").eq(i).html("");
+                break;
+              }
+            }
+          }
+        }
+        for(var i=$("ul li").length-1;i>=0;i--){
+          var t=i%4;
+          if($("ul li").eq(i).html()!=""){
+            if($("ul li").eq(i).html()==$("ul li").eq(i-1).html()&&t>0){
+              $("ul li").eq(i).html($("ul li").eq(i).html()*2);
+              $("ul li").eq(i-1).html("");
+              for(var k=i-1;k>i-t;k--){
+                $("ul li").eq(k).html($("ul li").eq(k-1).html());
+                $("ul li").eq(k-1).html("");
+              }
+            }
+          }
+        }
+        self.check.emptyBox();
+      }
+    },
+    this.show={
+      gameOver:function(){
+        alert("GameOver")
+      },
+      addNum:function(x){
+        var t=Math.ceil(Math.random()*x);
+        for(var i=0;i<$("ul li").length;i++){
+          if($("ul li").eq(i).html()==""){
+            t--;
+            if(t==0){
+              z=Math.floor(Math.random()*3);
+              $("ul li").eq(i).html(Math.pow(2,z));
+              self.show.flashScore(Math.pow(2,z));
+              break;
+            }
+          }
+        }
+      },
+      flashScore:function(x){
+        $(".score").html($(".score").html()*1+x);
+      }
+    }
+  }
+  var game=new Game();
+  var score=0;
+	function keyUp(e) {
+		var currKey=0,e=e||event;
+		currKey=e.keyCode||e.which||e.charCode;
+		var keyName = String.fromCharCode(currKey);
+		  switch(currKey){
+    		case 37:game.move.left();
+    		break;
+    		case 38:game.move.top();
+    		break;
+    		case 39:game.move.right();
+    		break;
+    		case 40:game.move.down();
+    		break;
+    		default:;
+        break;
+　    }
+	}
+	document.onkeyup = keyUp;
+  game.init();
+</script>
+</body>
+</html>
